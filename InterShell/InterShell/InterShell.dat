@@ -1,0 +1,25 @@
+﻿# 2mantools
+- Tools to automate 2MAN Stack development
+
+project = ~/source/repos/Abc
+tools-exe = C:/bin/2mantools/2mantools.exe
+
+* upgrade
+- Upgrades NET Core Angular template to 2MAN Stack
+
+$tools-exe -p $project -a upgrade
+
+* migrate
+- Upgrades NET Core Angular template to 2MAN Stack
+
+$tools-exe -p $project -a upgrade
+
+# sqlite
+- Tools to automate 2MAN Stack development
+
+sqlite-exe = C:/bin/2mantools/2mantools.exe
+
+* run-script
+- Upgrades NET Core Angular template to 2MAN Stack
+
+$tools-exe -p $project -a upgrade
