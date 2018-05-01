@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace InterBatch.Data {
+namespace Viscont.Data {
 
     public class Command {
 

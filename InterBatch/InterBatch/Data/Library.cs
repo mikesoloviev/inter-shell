@@ -5,21 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace InterBatch.Data {
+namespace Viscont.Data {
 
     public class Library {
 
         public string Home;
 
-        public string DataFile = "InterBatch.dat";
+        public string DataFile = "viscont.dat";
+        public string PrefFile = "viscont.ini";
 
         public List<Group> Groups = new List<Group>();
 
-        public Dictionary<string, Preference> Preferences = new Dictionary<string, Preference>();
+        public Dictionary<string, string> Preferences = new Dictionary<string, string>();
 
         public string TheGroupName {
-            get { return Preferences.ContainsKey("group") ? Preferences["group"].Value : ""; }
-            set { Preferences["group"].Value = value; }
+            get { return Preferences.ContainsKey("group") ? Preferences["group"] : ""; }
+            set { Preferences["group"] = value; }
         }
 
         public Library(string home) {
@@ -27,13 +28,43 @@ namespace InterBatch.Data {
         }
 
         public void Load() {
+            LoadPrefs();
+            LoadData();
+        }
+
+        public void Save() {
+            SavePrefs();
+            SaveData();
+        }
+
+        public void LoadPrefs() {
+            var path = Path.Combine(Home, PrefFile);
+            if (!File.Exists(path)) return;
+            foreach (var line in File.ReadAllLines(path)) {
+                if (line.Contains("=")) {
+                    var fields = line.Split('=');
+                    if (fields.Length == 2) {
+                        Preferences[fields[0].Trim()] = fields[1].Trim();
+                    }
+                }
+            }
+        }
+
+        public void SavePrefs() {
+            var code = new List<string>();
+            foreach (var name in Preferences.Keys) {
+                code.Add($"{name} = {Preferences[name]}");
+            }
+            File.WriteAllLines(Path.Combine(Home, PrefFile), code);
+        }
+
+        public void LoadData() {
             var path = Path.Combine(Home, DataFile);
             if (!File.Exists(path)) return;
             var group = new Group();
             var command = new Command();
-            var preference = new Preference();
             var setting = new Setting();
-            var context = "preference";
+            var context = "";
             foreach (var rawLine in File.ReadAllLines(path)) {
                 var line = rawLine.Trim();
                 if (line.StartsWith("#")) {
@@ -60,10 +91,6 @@ namespace InterBatch.Data {
                 }
                 else {
                     switch (context) {
-                        case "preference":
-                            preference = new Preference(line.Split('='));
-                            Preferences[preference.Name] = preference;
-                            break;
                         case "group":
                             setting = new Setting(line.Split('='));
                             group.Settings.Add(setting);
@@ -77,7 +104,7 @@ namespace InterBatch.Data {
             }
         }
 
-        public void Save() {
+        public void SaveData() {
             var code = new List<string>();
             foreach (var preference in Preferences.Values) {
                 code.Add(preference.Encode());
