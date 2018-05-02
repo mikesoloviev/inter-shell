@@ -17,48 +17,59 @@ namespace InterShell.DataSource {
 
         public Dictionary<string, string> Preferences = new Dictionary<string, string>();
 
+        public Library() {
+        }
+
         public Library(string home) {
             Home = home;
         }
 
         #region Convenience
 
-        public string TheGroupName {
-            get { return Preferences.ContainsKey("group") ? Preferences["group"] : ""; }
-            set { Preferences["group"] = value; }
+        public string GetGroupName() {
+            return Preferences.ContainsKey("group") ? Preferences["group"] : ""; 
         }
 
-        public Group TheGroup {
-            get { return Groups.Where(x => x.Name == TheGroupName).FirstOrDefault() ?? new Group(); }
+        public void SetGroupName(string value) {
+            Preferences["group"] = value;
         }
 
-        public List<Setting> TheSettings {
-            get { return TheGroup.Settings; }
+        public Group GetGroup() {
+            return Groups.Where(x => x.Name == GetGroupName()).FirstOrDefault() ?? new Group();
         }
 
-        public List<Command> TheCommands {
-            get { return TheGroup.Commands; }
+        public List<Group> GetGroups() {
+            return Groups;
         }
 
-        public string Code {
-            get { return string.Join(Environment.NewLine, Encode()); }
-            set { Decode(value); }
+        public List<Command> GetCommands() {
+            return GetGroup().Commands;
         }
 
-        public void SelectGroup(int index) {
-            TheGroupName = Groups[index].Name;
+        public List<Setting> GetSettings() {
+            return GetGroup().Settings;
         }
 
-        public void SetSetting(string name, string value) {
-            var setting = TheSettings.Where(x => x.Name == name).FirstOrDefault();
-            if (setting != null) setting.Value = value;
+        public string GetCode() {
+            return string.Join(Environment.NewLine, Encode());
         }
+
+        public void SetCode(string value) {
+            Decode(value);
+        }
+
+        // OLD
+
+        //public void SetSetting(string name, string value) {
+        //    var setting = TheSettings.Where(x => x.Name == name).FirstOrDefault();
+        //    if (setting != null) setting.Value = value;
+        //}
 
         #endregion
 
         #region Serialization 
 
-        string[] Encode() {
+        public string[] Encode() {
             var code = new List<string>();
             foreach (var group in Groups) {
                 code.AddRange(group.Encode());
@@ -66,11 +77,11 @@ namespace InterShell.DataSource {
             return code.ToArray();
         }
 
-        void Decode(string text) {
+        public void Decode(string text) {
             Decode(text.Replace('\r', '\n').Split('\n'));
         }
 
-        void Decode(string[] lines) {
+        public void Decode(string[] lines) {
             Groups.Clear();
             var group = new Group();
             var command = new Command();
@@ -150,6 +161,7 @@ namespace InterShell.DataSource {
             foreach (var name in Preferences.Keys) {
                 code.Add($"{name} = {Preferences[name]}");
             }
+            var path = Path.Combine(Home, PrefFile);
             File.WriteAllLines(Path.Combine(Home, PrefFile), code);
         }
 

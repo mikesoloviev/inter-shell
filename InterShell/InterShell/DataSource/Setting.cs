@@ -23,10 +23,11 @@ namespace InterShell.DataSource {
         }
 
         public Setting Clone() {
-            var cc = new Setting()
+            var cc = new Setting();
             cc.Name = Name;
             cc.Value = Value;
             cc.Options = Options;
+            return cc;
         }
 
         public void AddOptions(string[] options) {
