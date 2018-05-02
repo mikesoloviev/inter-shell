@@ -14,7 +14,8 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
-                    <ListView Name="CommandsList" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="CommandsList_SelectionChanged">
+                    <ListView Name="CommandList" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                            SelectionMode="Single" SelectionChanged="CommandList_SelectionChanged">
                         <ListView.Resources>
                             <Style TargetType="GridViewColumnHeader">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -37,9 +38,18 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                        
-                    </StackPanel>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>                    
+                        <TextBlock Name="CommandName" Text="{Binding Command.Name}" Grid.Column="0" FontWeight="Bold" Margin="0,0,10,0" />
+                        <TextBlock Name="CommandStatus" Text="{Binding Status}" Grid.Column="1" />
+                        <Button Name="CommandExecute" Content="Execute" Grid.Column="2" Width="90" Height="30" Margin="0,0,10,0" />
+                        <Button Name="CommandDetails" Content="Details" Grid.Column="3" Width="90" Height="30" Margin="0,0,10,0" />
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Settings" Height="30">
@@ -48,7 +58,8 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
-                    <ListView Name="SettingsList" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="SettingsList_SelectionChanged">
+                    <ListView Name="SettingList" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                            SelectionMode="Single" SelectionChanged="SettingList_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridView.Columns>
@@ -76,9 +87,16 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-
-                    </StackPanel>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>                    
+                        <TextBlock Name="SettingName" Text="{Binding Setting.Name}" Grid.Column="0" FontWeight="Bold" Margin="0,0,10,0" />
+                        <TextBox Name="SettingValue" Text="{Binding Setting.Value}" Grid.Column="1" />
+                        <Button Name="SettingUpdate" Content="Update" Grid.Column="2" Width="90" Height="30" Margin="0,0,10,0" />
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Groups" Height="30">
@@ -87,8 +105,8 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
-                    <ListView Name="GroupsList" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                              SelectionChanged="GroupsList_SelectionChanged" SelectionMode="Single">
+                    <ListView Name="GroupList" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                              SelectionMode="Single" SelectionChanged="GroupList_SelectionChanged">
                         <ListView.Resources>
                             <Style TargetType="GridViewColumnHeader">
                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -111,21 +129,31 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-
-                    </StackPanel>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>                    
+                        <TextBlock Name="GroupName" Text="{Binding Group.Name}" Grid.Column="0" FontWeight="Bold" />
+                        <Button Name="GroupSelect" Content="Select" Grid.Column="1" Width="90" Height="30" Margin="0,0,10,0" />
+                        <Button Name="GroupDetails" Content="Details" Grid.Column="2" Width="90" Height="30" Margin="0,0,10,0" />
+                    </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Result" Height="30">
+            <TabItem Header="Details" Height="30">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
-                    <TextBox Name="ResultText" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-
-                    </StackPanel>
+                    <TextBox Name="DetailText" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>                    
+                        <TextBlock Text="{Binding DetailLabel}" Grid.Column="0" />
+                    </Grid>
                 </Grid>
             </TabItem>
             <TabItem Header="Library" Height="30">
@@ -135,9 +163,18 @@
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
                     <TextBox Name="LibraryText" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Name="LibraryUpdate" Content="Update" Width="90" Height="30" Margin="0,0,10,0" Click="LibraryUpdate_Click" />
-                    </StackPanel>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>                    
+                        <TextBlock Name="LibraryStatus" Grid.Column="0" />
+                        <Button Name="LibraryUpdate" Content="Update" Grid.Column="1" Width="90" Height="30" Margin="0,0,10,0" Click="LibraryUpdate_Click" />
+                        <Button Name="LibraryImport" Content="Import" Grid.Column="2" Width="90" Height="30" Margin="0,0,10,0" />
+                        <Button Name="LibraryExport" Content="Export" Grid.Column="3" Width="90" Height="30" Margin="0,0,10,0" />
+                    </Grid>
                 </Grid>
             </TabItem>
         </TabControl>        

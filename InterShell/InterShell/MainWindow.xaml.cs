@@ -18,7 +18,15 @@ namespace InterShell {
 
     public partial class MainWindow : Window {
 
-        public Library Library { get; set; }
+        Library Library { get; set; }
+
+        int None = -1;
+
+        Group Group { get; set; } = new Group();
+        Command Command { get; set; } = new Command();
+        Setting Setting { get; set; } = new Setting();
+        string Status { get; set; } = "";
+        string DetailLabel { get; set; } = "";
 
         public MainWindow() {
             InitializeComponent();
@@ -32,19 +40,27 @@ namespace InterShell {
 
         void BindAll() {
             BindGroup();
-            GroupsList.ItemsSource = Library.Groups;
+            GroupList.ItemsSource = Library.Groups;
             LibraryText.Text = Library.Code;
         }
 
         void BindGroup() {
+            Reset();
             if (Library.TheGroupName.Length > 0) {
                 this.Title = $"InterShell - {Library.TheGroupName}";
             }
             else {
                 this.Title = "InterShell";
             }
-            CommandsList.ItemsSource = Library.TheCommands;
-            SettingsList.ItemsSource = Library.TheSettings;
+            CommandList.ItemsSource = Library.TheCommands;
+            SettingList.ItemsSource = Library.TheSettings;
+        }
+
+        void Reset() {
+            Group = new Group();
+            Command = new Command();
+            Setting = new Setting();
+            Status = "";
         }
 
         void LibraryUpdate_Click(object sender, RoutedEventArgs e) {
@@ -53,25 +69,34 @@ namespace InterShell {
             BindAll();
         }
 
-        void CommandsList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var index = CommandsList.SelectedIndex;
-            if (index < 0) return;
-            RunCommand(Library.TheCommands[index]);
+        void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            var index = CommandList.SelectedIndex;
+            Command = index == None ? new Command() : Library.TheCommands[index];
+            Status = "";
         }
 
-        void SettingsList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-
+        void SettingList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            var index = SettingList.SelectedIndex;
+            Group = index == None ? new Setting() : Library.TheSettings[index].Clone();
         }
 
-        void GroupsList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var index = GroupsList.SelectedIndex;
-            if (index < 0) return;
-            Library.SelectGroup(index);
-            Library.SavePrefs();
-            BindGroup();
+        void GroupList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+            var index = GroupList.SelectedIndex;
+            Group = index == None ? new Group() : Library.TheGroups[index];
         }
+        
+        // group select
+        // Library.SelectGroup(index);
+        // Library.SavePrefs();
+        // BindGroup();
 
-        void RunCommand(Command command) {
+        // setting update
+        // Library.SetSetting(Setting.Name, Setting.Value)
+        // Library.SaveData(); 
+        // LibraryText.Text = Library.Code;   
+        // SettingList.ItemsSource = Library.TheSettings;
+
+        void RunCommand() {
 
         }
     }
