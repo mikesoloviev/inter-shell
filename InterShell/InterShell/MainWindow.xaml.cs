@@ -18,86 +18,84 @@ namespace InterShell {
 
     public partial class MainWindow : Window {
 
-        Library Library { get; set; }
+        LibraryView LibraryView { get; set; }
 
         int None = -1;
 
-        Group Group { get; set; } = new Group();
-        Command Command { get; set; } = new Command();
-        Setting Setting { get; set; } = new Setting();
-        string Status { get; set; } = "";
-        string DetailLabel { get; set; } = "";
-
         public MainWindow() {
             InitializeComponent();
+            LibraryView = new LibraryView();
+            DataContext = LibraryView;
         }
 
         void Window_Loaded(object sender, RoutedEventArgs e) {
-            Library = new Library(AppContext.BaseDirectory);
-            Library.Load();
-            BindAll();
-        }
-
-        void BindAll() {
-            BindGroup();
-            GroupList.ItemsSource = Library.Groups;
-            LibraryText.Text = Library.Code;
-        }
-
-        void BindGroup() {
-            Reset();
-            if (Library.TheGroupName.Length > 0) {
-                this.Title = $"InterShell - {Library.TheGroupName}";
-            }
-            else {
-                this.Title = "InterShell";
-            }
-            CommandList.ItemsSource = Library.TheCommands;
-            SettingList.ItemsSource = Library.TheSettings;
-        }
-
-        void Reset() {
-            Group = new Group();
-            Command = new Command();
-            Setting = new Setting();
-            Status = "";
-        }
-
-        void LibraryUpdate_Click(object sender, RoutedEventArgs e) {
-            Library.Code = LibraryText.Text;
-            Library.SaveData();
-            BindAll();
+            LibraryView.OpenLibrary(AppContext.BaseDirectory);
+            LibraryView.BindAll();
         }
 
         void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             var index = CommandList.SelectedIndex;
-            Command = index == None ? new Command() : Library.TheCommands[index];
-            Status = "";
+            LibraryView.Command = index == None ? new Command() : LibraryView.Commands[index];
+            LibraryView.Status = "";
         }
 
         void SettingList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             var index = SettingList.SelectedIndex;
-            Group = index == None ? new Setting() : Library.TheSettings[index].Clone();
+            LibraryView.Setting = index == None ? new Setting() : LibraryView.Settings[index].Clone();
         }
 
         void GroupList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
             var index = GroupList.SelectedIndex;
-            Group = index == None ? new Group() : Library.TheGroups[index];
+            LibraryView.Group = index == None ? new Group() : LibraryView.Groups[index];
         }
         
-        // group select
-        // Library.SelectGroup(index);
-        // Library.SavePrefs();
-        // BindGroup();
+        void CommandExecute_Click(object sender, RoutedEventArgs e) {
 
-        // setting update
-        // Library.SetSetting(Setting.Name, Setting.Value)
-        // Library.SaveData(); 
-        // LibraryText.Text = Library.Code;   
-        // SettingList.ItemsSource = Library.TheSettings;
+        }
 
         void RunCommand() {
 
         }
+
+        void CommandDetails_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        void SettingUpdate_Click(object sender, RoutedEventArgs e) {
+            DetailText.Text = LibraryView.Setting.Value;
+
+            // setting update
+            // Library.SetSetting(Setting.Name, Setting.Value)
+            // Library.SaveData(); 
+            // LibraryText.Text = Library.Code;   
+            // SettingList.ItemsSource = Library.TheSettings;
+        }
+
+        void GroupSelect_Click(object sender, RoutedEventArgs e) {
+            if (LibraryView.Group.Name.Length == 0) return;
+            LibraryView.SelectGroup();
+            LibraryView.Library.SavePrefs();
+            LibraryView.BindGroup();
+            this.Title = LibraryView.FullTitle;
+        }
+
+        void GroupDetails_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        void LibraryUpdate_Click(object sender, RoutedEventArgs e) {
+            LibraryView.Library.SetCode(LibraryView.LibraryCode);
+            LibraryView.Library.SaveData();
+            LibraryView.BindAll();
+        }
+
+        void LibraryImport_Click(object sender, RoutedEventArgs e) {
+
+        }
+
+        void LibraryExport_Click(object sender, RoutedEventArgs e) {
+
+        }
+
     }
 }

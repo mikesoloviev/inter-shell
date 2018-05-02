@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="DataSource\Command.cs" />
     <Compile Include="DataSource\Group.cs" />
+    <Compile Include="DataSource\LibraryView.cs" />
     <Compile Include="DataSource\Setting.cs" />
     <Compile Include="DataSource\Library.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -93,10 +94,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="InterShell.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="InterShell.dat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
