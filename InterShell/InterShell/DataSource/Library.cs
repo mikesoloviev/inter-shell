@@ -21,7 +21,7 @@ namespace InterShell.DataSource {
             Home = home;
         }
 
-        #region Binding
+        #region Convenience
 
         public string TheGroupName {
             get { return Preferences.ContainsKey("group") ? Preferences["group"] : ""; }
@@ -47,6 +47,11 @@ namespace InterShell.DataSource {
 
         public void SelectGroup(int index) {
             TheGroupName = Groups[index].Name;
+        }
+
+        public void SetSetting(string name, string value) {
+            var setting = TheSettings.Where(x => x.Name == name).FirstOrDefault();
+            if (setting != null) setting.Value = value;
         }
 
         #endregion
@@ -115,7 +120,7 @@ namespace InterShell.DataSource {
 
         #endregion
 
-        #region Storage
+        #region Persistence
 
         public void Load() {
             LoadPrefs();

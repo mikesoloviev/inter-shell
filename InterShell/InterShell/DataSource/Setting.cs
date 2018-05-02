@@ -22,6 +22,13 @@ namespace InterShell.DataSource {
             Value = fields.Length > 1 ? fields[1].Trim() : "";
         }
 
+        public Setting Clone() {
+            var cc = new Setting()
+            cc.Name = Name;
+            cc.Value = Value;
+            cc.Options = Options;
+        }
+
         public void AddOptions(string[] options) {
             foreach (var option in options) {
                 Options.Add(option.Trim());

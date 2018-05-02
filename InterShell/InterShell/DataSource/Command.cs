@@ -14,6 +14,8 @@ namespace InterShell.DataSource {
 
         public List<string> Instructions { get; set; } = new List<string>();
 
+        public bool IsEmpty { get { return !Instructions.Any(); } }
+
         public List<string> Encode() {
             var code = new List<string> { $"* {Name}", $"- {Note}", "" };
             code.AddRange(Instructions);
