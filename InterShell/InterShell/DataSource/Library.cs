@@ -10,8 +10,14 @@ namespace InterShell.DataSource {
     public class Library {
 
         public string Home;
-        public string DataFile = "InterShell.dat";
-        public string PrefFile = "InterShell.ini";
+
+        static public string PrefFile = "InterShell.ini";
+        static public string DefaultDataFile = "InterShell.dat";
+        public static string DefaultGuideUrl = "~/InterShell.htm";
+
+        static public string LibraryKey = "library";
+        static public string GroupKey = "group";
+        static public string GuideKey = "guide";
 
         public List<Group> Groups { get; set; } = new List<Group>();
 
@@ -19,28 +25,49 @@ namespace InterShell.DataSource {
 
         #region Access
 
-        public string GetGroupName() {
-            return Preferences.ContainsKey("group") ? Preferences["group"] : ""; 
+        public string GetPref(string key, string defValue = "", string format = "{0}") {
+            try {
+                return string.Format(format, Preferences[key]);
+            }
+            catch {
+                return defValue;
+            }
         }
 
-        public void SetGroupName(string value) {
-            Preferences["group"] = value;
+        public void SetPref(string key, string value) {
+            Preferences[key] = value;
+        }
+
+        public int GetPrefInt(string key, int defValue = 0) {
+            try {
+                return int.Parse(Preferences[key]);
+            }
+            catch {
+                return defValue;
+            }
+        }
+
+        public string GetPrefUrl(string key, string defValue = "") {
+            var url = GetPref(key, defValue);
+            return url.StartsWith("~") ? Path.Combine(Home, url.Trim('~').Trim('/')) : url;
         }
 
         public Group GetGroup() {
-            return Groups.Where(x => x.Name == GetGroupName()).FirstOrDefault() ?? new Group();
+            return Groups.Where(x => x.Name == GetPref(GroupKey)).FirstOrDefault() ?? new Group();
         }
 
-        public List<Group> GetGroups() {
-            return Groups;
+        // NOTE: real = false -> dummy call needed to trigger binding
+
+        public List<Group> GetGroups(bool real = true) {
+            return real ? Groups : null;
         }
 
-        public List<Command> GetCommands() {
-            return GetGroup().Commands;
+        public List<Command> GetCommands(bool real = true) {
+            return real ? GetGroup().Commands : null;
         }
 
-        public List<Setting> GetSettings() {
-            return GetGroup().Settings;
+        public List<Setting> GetSettings(bool real = true) {
+            return real ? GetGroup().Settings : null;
         }
 
         public void SetSetting(string name, string value) {
@@ -124,6 +151,17 @@ namespace InterShell.DataSource {
 
         #region Storage
 
+        string DataPath { get { return Path.Combine(Home, GetPref(LibraryKey, DefaultDataFile)); } }
+
+        public void LoadData() {
+            if (!File.Exists(DataPath)) return;
+            Decode(File.ReadAllLines(DataPath));
+        }
+
+        public void SaveData() {
+            File.WriteAllLines(DataPath, Encode());
+        }
+
         public void LoadPrefs() {
             var path = Path.Combine(Home, PrefFile);
             if (!File.Exists(path)) return;
@@ -144,16 +182,6 @@ namespace InterShell.DataSource {
             }
             var path = Path.Combine(Home, PrefFile);
             File.WriteAllLines(Path.Combine(Home, PrefFile), code);
-        }
-
-        public void LoadData() {
-            var path = Path.Combine(Home, DataFile);
-            if (!File.Exists(path)) return;
-            Decode(File.ReadAllLines(path));
-        }
-
-        public void SaveData() {
-            File.WriteAllLines(Path.Combine(Home, DataFile), Encode());
         }
 
         #endregion
