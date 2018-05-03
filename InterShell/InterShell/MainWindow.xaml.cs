@@ -22,6 +22,7 @@ namespace InterShell {
     public partial class MainWindow : Window {
 
         LibraryManager Manager { get; set; }
+        ShellEngine Engine = new ShellEngine();
 
         public MainWindow() {
             InitializeComponent();
@@ -49,7 +50,14 @@ namespace InterShell {
         }
         
         void CommandExecute_Click(object sender, RoutedEventArgs e) {
-
+            if (Manager.Command.IsEmpty) {
+                Manager.DetailContent = "";
+                return;
+            }
+            var result = Engine.Run(Manager.Library.Home, $"{Manager.AppName}.bat", Manager.Command.Instructions, Manager.Group.GetSettingSet());
+            // TODO: analyze result
+            Manager.DetailContent = result;
+            // DetailsTab.IsSelected = true;
         }
 
         void CommandDetails_Click(object sender, RoutedEventArgs e) {
