@@ -5,46 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InterShell"
         mc:Ignorable="d"
-        Title="{Binding FullTitle}" Height="600" Width="800" Loaded="Window_Loaded">
-    <Window.Resources>
-        <Style x:Key="RegularButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Width" Value="90" />
-            <Setter Property="Height" Value="30" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="0,0,10,0" />
-        </Style>
-        <Style x:Key="RegularLabel" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-        <Style x:Key="LeadLabel" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="Margin" Value="10,0,10,0" />
-        </Style>
-        <Style x:Key="Singleline" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Height" Value="30" />
-        </Style>
-        <Style x:Key="Multiline" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="HorizontalScrollBarVisibility" Value="Auto" />
-            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-            <Setter Property="AcceptsReturn" Value="True" />
-        </Style>
-        <Style x:Key="RegularList" TargetType="ListView">
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="SelectionMode" Value="Single" />
-        </Style>
-        <Style x:Key="NoHeader" TargetType="GridViewColumnHeader" BasedOn="{StaticResource {x:Type GridViewColumnHeader}}">
-            <Setter Property="Visibility" Value="Collapsed" />
-        </Style>
-    </Window.Resources>    
-    <Grid>
-        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <TabItem Header="Commands" Height="30">
+        Title="{Binding WindowTitle}" Width="800" Height="600" Style="{StaticResource WorkAreaWindow}"
+        Loaded="Window_Loaded">
+    <Grid Style="{StaticResource WorkAreaGrid}">
+        <TabControl Style="{StaticResource WorkAreaTab}">
+            <TabItem Header="Commands" Style="{StaticResource RegularTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -78,12 +43,12 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Command.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
                         <TextBlock Text="{Binding CommandStatus}" Grid.Column="1" Style="{StaticResource RegularLabel}" />
-                        <Button Content="Execute" Grid.Column="2" Style="{StaticResource RegularButton}" Click="CommandExecute_Click" />
-                        <Button Content="Details" Grid.Column="3" Style="{StaticResource RegularButton}" Click="CommandDetails_Click" />
+                        <Button Content="Execute" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="CommandExecute_Click" />
+                        <Button Content="Details" Grid.Column="3" Template="{StaticResource RoundedButton}" Click="CommandDetails_Click" />
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Settings" Height="30">
+            <TabItem Header="Settings" Style="{StaticResource RegularTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -127,11 +92,11 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Setting.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
                         <TextBox Text="{Binding Setting.Value}" Grid.Column="1" Style="{StaticResource Singleline}" />
-                        <Button Content="Update" Grid.Column="3" Style="{StaticResource RegularButton}" Click="SettingUpdate_Click" />
+                        <Button Content="Update" Grid.Column="3" Template="{StaticResource RoundedButton}" Click="SettingUpdate_Click" />
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Groups" Height="30">
+            <TabItem Header="Groups" Style="{StaticResource RegularTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -163,12 +128,12 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Group.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
-                        <Button Content="Select" Grid.Column="1" Style="{StaticResource RegularButton}" Click="GroupSelect_Click" />
-                        <Button Content="Details" Grid.Column="2" Style="{StaticResource RegularButton}" Click="GroupDetails_Click" />
+                        <Button Content="Select" Grid.Column="1" Template="{StaticResource RoundedButton}" Click="GroupSelect_Click" />
+                        <Button Content="Details" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="GroupDetails_Click" />
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Details" Height="30">
+            <TabItem Header="Details" Name="DetailsTab" Style="{StaticResource RegularTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -183,7 +148,7 @@
                     </Grid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Library" Height="30">
+            <TabItem Header="Library" Style="{StaticResource RegularTab}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -198,9 +163,25 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding LibraryStatus}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
-                        <Button Content="Update" Grid.Column="1" Style="{StaticResource RegularButton}" Click="LibraryUpdate_Click" />
-                        <Button Content="Import" Grid.Column="2" Style="{StaticResource RegularButton}" Click="LibraryImport_Click" />
-                        <Button Content="Export" Grid.Column="3" Style="{StaticResource RegularButton}" Click="LibraryExport_Click" />
+                        <Button Content="Update" Grid.Column="1" Template="{StaticResource RoundedButton}" Click="LibraryUpdate_Click" />
+                        <Button Content="Import" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="LibraryImport_Click" />
+                        <Button Content="Export" Grid.Column="3" Template="{StaticResource RoundedButton}" Click="LibraryExport_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Guide" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <WebBrowser Name="GuideBrowser" Grid.Row="0" Style="{StaticResource BrowserWindow}" />
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Style="{StaticResource RegularLabel}">© 2018</TextBlock>
                     </Grid>
                 </Grid>
             </TabItem>

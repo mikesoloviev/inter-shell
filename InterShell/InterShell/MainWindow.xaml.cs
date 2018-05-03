@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using InterShell.DataSource;
+
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
+//using System.Windows.Data;
+//using System.Windows.Documents;
+//using System.Windows.Input;
+//using System.Windows.Media;
+//using System.Windows.Media.Imaging;
+//using System.Windows.Navigation;
+//using System.Windows.Shapes;
+//using InterShell.DataSource;
 
 namespace InterShell {
 
@@ -28,6 +30,9 @@ namespace InterShell {
 
         void Window_Loaded(object sender, RoutedEventArgs e) {
             Manager.Open(AppContext.BaseDirectory);
+            Width = Manager.WindowWidth;
+            Height = Manager.WindowHeight;
+            GuideBrowser.Navigate(Manager.GuideUrl);
         }
 
         void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -48,7 +53,7 @@ namespace InterShell {
 
         void CommandDetails_Click(object sender, RoutedEventArgs e) {
             Manager.DisplayDetails(Division.Command);
-            // TODO: open Details tab
+            DetailsTab.IsSelected = true;
         }
 
         void SettingUpdate_Click(object sender, RoutedEventArgs e) {
@@ -61,7 +66,7 @@ namespace InterShell {
 
         void GroupDetails_Click(object sender, RoutedEventArgs e) {
             Manager.DisplayDetails(Division.Group);
-            // TODO: open Details tab
+            DetailsTab.IsSelected = true;
         }
 
         void LibraryUpdate_Click(object sender, RoutedEventArgs e) {

@@ -6,7 +6,7 @@ namespace InterShell {
         public const int None = -1;
     }
 
-    enum Division { 
+    public enum Division { 
         Library,
         Group, 
         Command,

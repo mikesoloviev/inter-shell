@@ -13,6 +13,9 @@ namespace InterShell {
 
         public Library Library = new Library();
 
+        public static string AppName = "InterShell";
+        public static int[] WindowSize = { 800, 600 };
+
         #region Logic
 
         public void Open(string home) {
@@ -20,18 +23,20 @@ namespace InterShell {
             Library.LoadPrefs();
             Library.LoadData();
             MapModel(Division.Library);
+            WindowWidth = Library.GetPrefInt("window-width", WindowSize[0]);
+            WindowHeight = Library.GetPrefInt("window-height", WindowSize[1]);
         }
 
         public void UpdateSetting() {
             if (Setting.IsEmpty) return;
-            Library.SetSetting(Setting.Name, Setting.Value)
+            Library.SetSetting(Setting.Name, Setting.Value);
             Library.SaveData(); 
             MapModel(Division.Setting);
         }
 
         public void SelectGroup() {
             if (Group.IsEmpty) return;
-            Library.SetGroupName(Group.Name);
+            Library.SetPref(Library.GroupKey, Group.Name);
             Library.SavePrefs();
             MapModel(Division.Group);
         }
@@ -48,7 +53,7 @@ namespace InterShell {
                 CommandStatus = "";
             }
             else if (division == Division.Setting) {
-                Setting = index == Selection.None ? new Setting() : Settings[index].Clone();
+                Setting = index == Selection.None ? new Setting() : Settings[index];
             }
             else if (division == Division.Group) {
                 Group = index == Selection.None ? new Group() : Groups[index];
@@ -68,18 +73,18 @@ namespace InterShell {
 
         void MapModel(Division division) {
             if (division == Division.Library) {
-                Groups = Library.GetGroups();
+                Groups = Library.GetGroups(false);
                 Group = new Group();
             }
             if (division == Division.Library || division == Division.Group) {
-                Commands = Library.GetCommands();
-                FullTitle = "InterShell" + (string.IsNullOrEmpty(Library.GetGroupName()) ? "" : $" - {Library.GetGroupName()}");
+                Commands = Library.GetCommands(false);
                 Command = new Command();
                 Setting = new Setting();
-                Status = "";
+                CommandStatus = "";
+                WindowTitle = AppName + Library.GetPref(Library.GroupKey, format: " - {0}");
             }
             if (division == Division.Library || division == Division.Group || division == Division.Setting) {
-                Settings = Library.GetSettings();
+                Settings = Library.GetSettings(false);
             }
             if (division == Division.Library || division == Division.Setting) {
                 LibraryCode = Library.GetCode();
@@ -90,29 +95,32 @@ namespace InterShell {
 
         #region Model
 
-        public string FullTitle {
-            get { return fullTitle; }
-            set { fullTitle = value; OnPropertyChanged(nameof(FullTitle)); }
+        public string WindowTitle {
+            get { return windowTitle; }
+            set { windowTitle = value; OnPropertyChanged(nameof(WindowTitle)); }
         }
-        string fullTitle = "InterShell";
+        string windowTitle = AppName;
+
+        public int WindowWidth { get; set; }
+
+        public int WindowHeight { get; set; }
+
+        public string GuideUrl { get { return Library.GetPrefUrl(Library.GuideKey, Library.DefaultGuideUrl); } }
 
         public List<Group> Groups {
-            get { return groups; }
-            set { groups = value; OnPropertyChanged(nameof(Groups)); }
+            get { return Library.GetGroups(); }
+            set { OnPropertyChanged(nameof(Groups)); }
         }
-        List<Group> groups = new List<Group>();
 
         public List<Command> Commands {
-            get { return commands; }
-            set { commands = value; OnPropertyChanged(nameof(Commands)); }
+            get { return Library.GetCommands(); }
+            set { OnPropertyChanged(nameof(Commands)); }
         }
-        List<Command> commands = new List<Command>();
 
         public List<Setting> Settings {
-            get { return settings; }
-            set { settings = value; OnPropertyChanged(nameof(Settings)); }
+            get { return Library.GetSettings(); }
+            set { OnPropertyChanged(nameof(Settings)); }
         }
-        List<Setting> settings = new List<Setting>();
 
         public Group Group {
             get { return group; }
