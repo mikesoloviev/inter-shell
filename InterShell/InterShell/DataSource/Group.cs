@@ -18,6 +18,14 @@ namespace InterShell.DataSource {
 
         public bool IsEmpty { get { return Name.Length == 0; } }
 
+        public Dictionary<string, string> GetSettingSet() {
+            var settingSet = new Dictionary<string, string>();
+            foreach (var setting in Settings) {
+                settingSet[setting.Key] = setting.Value;
+            }
+            return settingSet;
+        }
+
         public List<string> Encode() {
             if (IsEmpty) return new List<string>();
             var code = new List<string> { $"# {Name}", $"- {Note}" };
