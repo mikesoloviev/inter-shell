@@ -17,14 +17,7 @@ namespace InterShell.DataSource {
 
         public Dictionary<string, string> Preferences = new Dictionary<string, string>();
 
-        public Library() {
-        }
-
-        public Library(string home) {
-            Home = home;
-        }
-
-        #region Convenience
+        #region Access
 
         public string GetGroupName() {
             return Preferences.ContainsKey("group") ? Preferences["group"] : ""; 
@@ -50,6 +43,11 @@ namespace InterShell.DataSource {
             return GetGroup().Settings;
         }
 
+        public void SetSetting(string name, string value) {
+           var setting = GetSettings().Where(x => x.Name == name).FirstOrDefault();
+           if (setting != null) setting.Value = value;
+        }
+
         public string GetCode() {
             return string.Join(Environment.NewLine, Encode());
         }
@@ -58,16 +56,9 @@ namespace InterShell.DataSource {
             Decode(value);
         }
 
-        // OLD
-
-        //public void SetSetting(string name, string value) {
-        //    var setting = TheSettings.Where(x => x.Name == name).FirstOrDefault();
-        //    if (setting != null) setting.Value = value;
-        //}
-
         #endregion
 
-        #region Serialization 
+        #region Coder 
 
         public string[] Encode() {
             var code = new List<string>();
@@ -131,17 +122,7 @@ namespace InterShell.DataSource {
 
         #endregion
 
-        #region Persistence
-
-        public void Load() {
-            LoadPrefs();
-            LoadData();
-        }
-
-        public void Save() {
-            SavePrefs();
-            SaveData();
-        }
+        #region Storage
 
         public void LoadPrefs() {
             var path = Path.Combine(Home, PrefFile);

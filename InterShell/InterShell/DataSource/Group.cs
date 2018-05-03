@@ -16,7 +16,10 @@ namespace InterShell.DataSource {
 
         public List<Command> Commands { get; set; } = new List<Command>();
 
+        public bool IsEmpty { get { return Name.Length == 0; } }
+
         public List<string> Encode() {
+            if (IsEmpty) return new List<string>();
             var code = new List<string> { $"# {Name}", $"- {Note}" };
             code.Add("");
             foreach (var setting in Settings) {

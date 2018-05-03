@@ -14,6 +14,8 @@ namespace InterShell.DataSource {
 
         public List<string> Options { get; set; } = new List<string>();
 
+        public bool IsEmpty { get { return Name.Length == 0; } }
+
         public Setting() {
         }
 
@@ -37,6 +39,7 @@ namespace InterShell.DataSource {
         }
 
         public List<string> Encode() {
+            if (IsEmpty) return new List<string>();
             var code = new List<string> { $"{Name} = {Value}" };
             if (Options.Any()) code.Add($": {string.Join(", ", Options)}");
             return code;
