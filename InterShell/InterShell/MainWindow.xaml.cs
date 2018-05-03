@@ -18,75 +18,54 @@ namespace InterShell {
 
     public partial class MainWindow : Window {
 
-        LibraryView LibraryView { get; set; }
-
-        int None = -1;
+        LibraryManager Manager { get; set; }
 
         public MainWindow() {
             InitializeComponent();
-            LibraryView = new LibraryView();
-            DataContext = LibraryView;
+            Manager = new LibraryManager();
+            DataContext = Manager;
         }
 
         void Window_Loaded(object sender, RoutedEventArgs e) {
-            LibraryView.OpenLibrary(AppContext.BaseDirectory);
-            LibraryView.BindAll();
+            Manager.Open(AppContext.BaseDirectory);
         }
 
         void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var index = CommandList.SelectedIndex;
-            LibraryView.Command = index == None ? new Command() : LibraryView.Commands[index];
-            LibraryView.Status = "";
+            Manager.PreselectItem(Division.Command, CommandList.SelectedIndex);
         }
 
         void SettingList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var index = SettingList.SelectedIndex;
-            LibraryView.Setting = index == None ? new Setting() : LibraryView.Settings[index].Clone();
+            Manager.PreselectItem(Division.Setting, SettingList.SelectedIndex);
         }
 
         void GroupList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-            var index = GroupList.SelectedIndex;
-            LibraryView.Group = index == None ? new Group() : LibraryView.Groups[index];
+            Manager.PreselectItem(Division.Group, GroupList.SelectedIndex);
         }
         
         void CommandExecute_Click(object sender, RoutedEventArgs e) {
 
         }
 
-        void RunCommand() {
-
-        }
-
         void CommandDetails_Click(object sender, RoutedEventArgs e) {
-
+            Manager.DisplayDetails(Division.Command);
+            // TODO: open Details tab
         }
 
         void SettingUpdate_Click(object sender, RoutedEventArgs e) {
-            DetailText.Text = LibraryView.Setting.Value;
-
-            // setting update
-            // Library.SetSetting(Setting.Name, Setting.Value)
-            // Library.SaveData(); 
-            // LibraryText.Text = Library.Code;   
-            // SettingList.ItemsSource = Library.TheSettings;
+            Manager.UpdateSetting();
         }
 
         void GroupSelect_Click(object sender, RoutedEventArgs e) {
-            if (LibraryView.Group.Name.Length == 0) return;
-            LibraryView.SelectGroup();
-            LibraryView.Library.SavePrefs();
-            LibraryView.BindGroup();
-            this.Title = LibraryView.FullTitle;
+            Manager.SelectGroup();
         }
 
         void GroupDetails_Click(object sender, RoutedEventArgs e) {
-
+            Manager.DisplayDetails(Division.Group);
+            // TODO: open Details tab
         }
 
         void LibraryUpdate_Click(object sender, RoutedEventArgs e) {
-            LibraryView.Library.SetCode(LibraryView.LibraryCode);
-            LibraryView.Library.SaveData();
-            LibraryView.BindAll();
+            Manager.UpdateLibrary();
         }
 
         void LibraryImport_Click(object sender, RoutedEventArgs e) {

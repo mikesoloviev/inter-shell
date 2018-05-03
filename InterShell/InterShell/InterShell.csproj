@@ -67,9 +67,11 @@
     </Compile>
     <Compile Include="DataSource\Command.cs" />
     <Compile Include="DataSource\Group.cs" />
-    <Compile Include="DataSource\LibraryView.cs" />
     <Compile Include="DataSource\Setting.cs" />
     <Compile Include="DataSource\Library.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="LibraryManager.cs" />
+    <Compile Include="ShellEngine.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:InterShell"
         mc:Ignorable="d"
-        Title="InterShell" Height="600" Width="800" Loaded="Window_Loaded">
+        Title="{Binding FullTitle}" Height="600" Width="800" Loaded="Window_Loaded">
     <Window.Resources>
         <Style x:Key="RegularButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Width" Value="90" />
@@ -77,7 +77,7 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Command.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
-                        <TextBlock Text="{Binding Status}" Grid.Column="1" Style="{StaticResource RegularLabel}" />
+                        <TextBlock Text="{Binding CommandStatus}" Grid.Column="1" Style="{StaticResource RegularLabel}" />
                         <Button Content="Execute" Grid.Column="2" Style="{StaticResource RegularButton}" Click="CommandExecute_Click" />
                         <Button Content="Details" Grid.Column="3" Style="{StaticResource RegularButton}" Click="CommandDetails_Click" />
                     </Grid>
@@ -174,7 +174,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="50" />
                     </Grid.RowDefinitions>
-                    <TextBox Name="DetailText" Grid.Row="0" Style="{StaticResource Multiline}" />
+                    <TextBox Text="{Binding DetailContent}" Grid.Row="0" Style="{StaticResource Multiline}" />
                     <Grid Grid.Row="1" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -197,7 +197,7 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Name="LibraryStatus" Grid.Column="0" Style="{StaticResource LeadLabel}" />
+                        <TextBlock Text="{Binding LibraryStatus}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
                         <Button Content="Update" Grid.Column="1" Style="{StaticResource RegularButton}" Click="LibraryUpdate_Click" />
                         <Button Content="Import" Grid.Column="2" Style="{StaticResource RegularButton}" Click="LibraryImport_Click" />
                         <Button Content="Export" Grid.Column="3" Style="{StaticResource RegularButton}" Click="LibraryExport_Click" />
