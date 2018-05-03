@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using InterShell.DataSource;
+using Microsoft.Win32;
 
 namespace InterShell {
 
@@ -47,6 +49,15 @@ namespace InterShell {
             MapModel(Division.Library);
         }
 
+        public void ImportLibrary(string path) {
+            LibraryCode = File.ReadAllText(path);
+            UpdateLibrary();
+        }
+
+        public void ExportLibrary(string path) {
+            File.WriteAllText(path, LibraryCode);
+        }
+
         public void PreselectItem(Division division, int index) {
             if (division == Division.Command) {
                 Command = index == Selection.None ? new Command() : Commands[index];
@@ -69,6 +80,12 @@ namespace InterShell {
                 DetailLabel = Command.Name;
                 DetailContent = string.Join(Environment.NewLine, Command.Encode());
             }
+        }
+
+        public void SetupFileDialog(FileDialog dialog) {
+            dialog.InitialDirectory = Library.Home;
+            dialog.Filter = "Data files (*.dat)|*.dat|Text files (*.txt)|*.txt|All files (*.*)|*.*";
+            dialog.DefaultExt = ".dat";
         }
 
         void MapModel(Division division) {

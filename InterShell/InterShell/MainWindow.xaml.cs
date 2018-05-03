@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using Microsoft.Win32;
 
 //using System.Collections.Generic;
 //using System.Linq;
@@ -74,11 +75,21 @@ namespace InterShell {
         }
 
         void LibraryImport_Click(object sender, RoutedEventArgs e) {
-
+            var dialog = new OpenFileDialog();
+            Manager.SetupFileDialog(dialog);
+            dialog.Multiselect = false;
+            if (dialog.ShowDialog() == true) {
+                Manager.ImportLibrary(dialog.FileName);
+            }
         }
 
         void LibraryExport_Click(object sender, RoutedEventArgs e) {
-
+            var dialog = new SaveFileDialog();
+            Manager.SetupFileDialog(dialog);
+            dialog.FileName = LibraryManager.AppName;
+            if (dialog.ShowDialog() == true) {
+                Manager.ExportLibrary(dialog.FileName);
+            }
         }
 
     }
