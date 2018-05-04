@@ -10,15 +10,17 @@ namespace InterShell {
 
     public class ShellEngine {
 
-        public string Run(string home, string filename, List<string> instructions, Dictionary<string, string> settings) {
+        public CommandResult Run(string home, string filename, Command command, Group group) {
             var script = List<string>();
-            foreach (var line in instructions) {
+            var settingSet = group.GetSettingSet();
+            var result = new CommandResult();
+            foreach (var line in command.Instructions) {
                 script.Add(Eval(line, settings));
             }
-            return RunShell home, filename, script);
+            return RunShell home, filename, script, result);
         }
 
-        string RunShell(string home, string filename, List<string> script) {
+        void RunShell(string home, string filename, List<string> script, CommandResult result) {
             var command = Path.Combine(home, filename);
             File.WriteAllLines(command, script);
             var startInfo = new ProcessStartInfo();

@@ -52,14 +52,12 @@ namespace InterShell {
         }
         
         void CommandExecute_Click(object sender, RoutedEventArgs e) {
-            if (Manager.Command.IsEmpty) {
-                Manager.DetailContent = "";
-                return;
-            }
-            var result = Engine.Run(Config.Home, Config.ExecFile, Manager.Command.Instructions, Manager.Group.GetSettingSet());
-            // TODO: analyze result
-            Manager.DetailContent = result;
-            // DetailsTab.IsSelected = true;
+            if (Manager.Command.IsEmpty) return;
+            CommandStatus = "Running...";
+            var result = Engine.Run(Config.Home, Config.ExecFile, Manager.Command, Manager.Group);
+            CommandStatus = "Done";
+            Manager.DetailContent = result.ToText();
+            DetailsTab.IsSelected = true;
         }
 
         void CommandDetails_Click(object sender, RoutedEventArgs e) {
