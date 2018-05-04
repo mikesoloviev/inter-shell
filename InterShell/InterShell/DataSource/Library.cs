@@ -9,28 +9,20 @@ namespace InterShell.DataSource {
 
     public class Library {
 
-        public string Home;
-
-        static public string PrefFile = "InterShell.ini";
-        static public string DefaultDataFile = "InterShell.dat";
-        public static string DefaultGuideUrl = "~/InterShell.htm";
-
-        static public string LibraryKey = "library";
-        static public string GroupKey = "group";
-        static public string GuideKey = "guide";
-
         public List<Group> Groups { get; set; } = new List<Group>();
 
         public Dictionary<string, string> Preferences = new Dictionary<string, string>();
 
+        public static string GroupKey = "group";
+
         #region Access
 
-        public string GetPref(string key, string defValue = "", string format = "{0}") {
+        public string GetPref(string key, string format = "{0}") {
             try {
                 return string.Format(format, Preferences[key]);
             }
             catch {
-                return defValue;
+                return "";
             }
         }
 
@@ -47,10 +39,10 @@ namespace InterShell.DataSource {
             }
         }
 
-        public string GetPrefUrl(string key, string defValue = "") {
-            var url = GetPref(key, defValue);
-            return url.StartsWith("~") ? Path.Combine(Home, url.Trim('~').Trim('/')) : url;
-        }
+        // public string GetPrefUrl(string key, string defValue = "") {
+        //     var url = GetPref(key, defValue);
+        //     return url.StartsWith("~") ? Path.Combine(Home, url.Trim('~').Trim('/')) : url;
+        // }
 
         public Group GetGroup() {
             return Groups.Where(x => x.Name == GetPref(GroupKey)).FirstOrDefault() ?? new Group();
@@ -151,7 +143,8 @@ namespace InterShell.DataSource {
 
         #region Storage
 
-        string DataPath { get { return Path.Combine(Home, GetPref(LibraryKey, DefaultDataFile)); } }
+        string DataPath { get { return Path.Combine(Config.Home, Config.DataFile); } }
+        string PrefPath { get { return Path.Combine(Config.Home, Config.PrefFile); } }
 
         public void LoadData() {
             if (!File.Exists(DataPath)) return;
@@ -163,9 +156,8 @@ namespace InterShell.DataSource {
         }
 
         public void LoadPrefs() {
-            var path = Path.Combine(Home, PrefFile);
-            if (!File.Exists(path)) return;
-            foreach (var line in File.ReadAllLines(path)) {
+            if (!File.Exists(PrefPath)) return;
+            foreach (var line in File.ReadAllLines(PrefPath)) {
                 if (line.Contains("=")) {
                     var fields = line.Split('=');
                     if (fields.Length == 2) {
@@ -180,8 +172,7 @@ namespace InterShell.DataSource {
             foreach (var name in Preferences.Keys) {
                 code.Add($"{name} = {Preferences[name]}");
             }
-            var path = Path.Combine(Home, PrefFile);
-            File.WriteAllLines(Path.Combine(Home, PrefFile), code);
+            File.WriteAllLines(PrefPath, code);
         }
 
         #endregion
