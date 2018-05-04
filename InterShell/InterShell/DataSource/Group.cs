@@ -9,13 +9,11 @@ namespace InterShell.DataSource {
     public class Group {
 
         public string Name { get; set; } = "";
-
-        public string Note { get; set; } = "";
-
+        public List<string> Notes { get; set; } = new List<string>();
         public List<Setting> Settings { get; set; } = new List<Setting>();
-
         public List<Command> Commands { get; set; } = new List<Command>();
 
+        public string Note { get { return Notes.First() ?? ""; } }
         public bool IsEmpty { get { return Name.Length == 0; } }
 
         public Dictionary<string, string> GetSettingSet() {
@@ -28,7 +26,8 @@ namespace InterShell.DataSource {
 
         public List<string> Encode() {
             if (IsEmpty) return new List<string>();
-            var code = new List<string> { $"# {Name}", $"- {Note}" };
+            var code = new List<string> { $"# {Name}" };
+            code.AddRange(Notes.Select(x => $"- {x}"));
             code.Add("");
             foreach (var setting in Settings) {
                 code.AddRange(setting.Encode());

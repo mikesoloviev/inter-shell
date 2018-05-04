@@ -116,8 +116,8 @@ namespace InterShell.DataSource {
                 }
                 else if (line.StartsWith("-")) {
                     switch (context) {
-                        case "group": group.Note = line.TrimStart('-').Trim(); break;
-                        case "command": command.Note = line.TrimStart('-').Trim(); break;
+                        case "group": group.Notes.Add(line.TrimStart('-').Trim()); break;
+                        case "command": command.Notes.Add(line.TrimStart('-').Trim()); break;
                         default: break;
                     }
                 }

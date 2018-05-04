@@ -9,9 +9,7 @@ namespace InterShell.DataSource {
     public class Setting {
 
         public string Name { get; set; } = "";
-
         public string Value { get; set; } = "";
-
         public List<string> Options { get; set; } = new List<string>();
 
         public bool IsEmpty { get { return Name.Length == 0; } }
