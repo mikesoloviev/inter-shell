@@ -21,7 +21,7 @@ namespace InterShell.DataSource {
         public Dictionary<string, string> GetSettingSet() {
             var settingSet = new Dictionary<string, string>();
             foreach (var setting in Settings) {
-                settingSet[setting.Key] = setting.Value;
+                settingSet[setting.Name] = setting.Value;
             }
             return settingSet;
         }
