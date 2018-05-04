@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
+using InterShell.Components;
 
 //using System.Collections.Generic;
 //using System.Linq;
@@ -16,6 +17,7 @@ using Microsoft.Win32;
 //using System.Windows.Navigation;
 //using System.Windows.Shapes;
 //using InterShell.DataSource;
+
 
 namespace InterShell {
 
@@ -53,9 +55,10 @@ namespace InterShell {
         
         void CommandExecute_Click(object sender, RoutedEventArgs e) {
             if (Manager.Command.IsEmpty) return;
-            CommandStatus = "Running...";
-            var result = Engine.Run(Config.Home, Config.ExecFile, Manager.Command, Manager.Group);
-            CommandStatus = "Done";
+            Manager.CommandStatus = "Running...";
+            var result = Engine.Run(Config.Home, Config.ShellFile, Manager.Command, Manager.Group);
+            Manager.CommandStatus = "Done";
+            Manager.DetailLabel = result.Name;
             Manager.DetailContent = result.ToText();
             DetailsTab.IsSelected = true;
         }

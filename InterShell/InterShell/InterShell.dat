@@ -4,6 +4,11 @@
 project = ~/source/repos/Abc
 tools-exe = C:/bin/2mantools/2mantools.exe
 
+* devtest
+- Various dev. tests
+
+echo Test new >> $OUT
+
 * upgrade
 - Upgrades NET Core Angular template to 2MAN Stack
 
