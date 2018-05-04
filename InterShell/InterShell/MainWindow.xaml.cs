@@ -23,6 +23,7 @@ namespace InterShell {
 
         LibraryManager Manager { get; set; }
         ShellEngine Engine = new ShellEngine();
+        MarkLite Marker = new MarkLite();
 
         public MainWindow() {
             InitializeComponent();
@@ -31,10 +32,11 @@ namespace InterShell {
         }
 
         void Window_Loaded(object sender, RoutedEventArgs e) {
-            Manager.Open(AppContext.BaseDirectory);
+            Config.Home = AppContext.BaseDirectory;
+            Manager.Open();
             Width = Manager.WindowWidth;
             Height = Manager.WindowHeight;
-            GuideBrowser.Navigate(Manager.GuideUrl);
+            GuideBrowser.NavigateToString(Marker.Load(Path.Combine(Config.Home, Config.HelpFile)));
         }
 
         void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -54,7 +56,7 @@ namespace InterShell {
                 Manager.DetailContent = "";
                 return;
             }
-            var result = Engine.Run(Manager.Library.Home, $"{Manager.AppName}.bat", Manager.Command.Instructions, Manager.Group.GetSettingSet());
+            var result = Engine.Run(Config.Home, Config.ExecFile, Manager.Command.Instructions, Manager.Group.GetSettingSet());
             // TODO: analyze result
             Manager.DetailContent = result;
             // DetailsTab.IsSelected = true;
@@ -94,7 +96,7 @@ namespace InterShell {
         void LibraryExport_Click(object sender, RoutedEventArgs e) {
             var dialog = new SaveFileDialog();
             Manager.SetupFileDialog(dialog);
-            dialog.FileName = LibraryManager.AppName;
+            dialog.FileName = Config.AppName;
             if (dialog.ShowDialog() == true) {
                 Manager.ExportLibrary(dialog.FileName);
             }

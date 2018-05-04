@@ -68,6 +68,7 @@
     <Compile Include="DataSource\Library.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="LibraryManager.cs" />
+    <Compile Include="MarkLite.cs" />
     <Compile Include="ShellEngine.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -110,7 +111,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="InterShell.htm">
+    <Content Include="InterShell.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

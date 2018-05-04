@@ -15,18 +15,14 @@ namespace InterShell {
 
         public Library Library = new Library();
 
-        public static string AppName = "InterShell";
-        public static int[] WindowSize = { 800, 600 };
-
         #region Logic
 
-        public void Open(string home) {
-            Library.Home = home;
+        public void Open() {
             Library.LoadPrefs();
             Library.LoadData();
             MapModel(Division.Library);
-            WindowWidth = Library.GetPrefInt("window-width", WindowSize[0]);
-            WindowHeight = Library.GetPrefInt("window-height", WindowSize[1]);
+            WindowWidth = Library.GetPrefInt("window-width", Config.WindowWidth);
+            WindowHeight = Library.GetPrefInt("window-height", Config.WindowHeight);
         }
 
         public void UpdateSetting() {
@@ -83,7 +79,7 @@ namespace InterShell {
         }
 
         public void SetupFileDialog(FileDialog dialog) {
-            dialog.InitialDirectory = Library.Home;
+            dialog.InitialDirectory = Config.Home;
             dialog.Filter = "Data files (*.dat)|*.dat|Text files (*.txt)|*.txt|All files (*.*)|*.*";
             dialog.DefaultExt = ".dat";
         }
@@ -98,7 +94,7 @@ namespace InterShell {
                 Command = new Command();
                 Setting = new Setting();
                 CommandStatus = "";
-                WindowTitle = AppName + Library.GetPref(Library.GroupKey, format: " - {0}");
+                WindowTitle = Config.AppName + Library.GetPref(Library.GroupKey, " - {0}");
             }
             if (division == Division.Library || division == Division.Group || division == Division.Setting) {
                 Settings = Library.GetSettings(false);
@@ -116,13 +112,13 @@ namespace InterShell {
             get { return windowTitle; }
             set { windowTitle = value; OnPropertyChanged(nameof(WindowTitle)); }
         }
-        string windowTitle = AppName;
+        string windowTitle = Config.AppName;
 
         public int WindowWidth { get; set; }
 
         public int WindowHeight { get; set; }
 
-        public string GuideUrl { get { return Library.GetPrefUrl(Library.GuideKey, Library.DefaultGuideUrl); } }
+        //public string GuideUrl { get { return Library.GetPrefUrl(Library.GuideKey, Library.DefaultGuideUrl); } }
 
         public List<Group> Groups {
             get { return Library.GetGroups(); }
