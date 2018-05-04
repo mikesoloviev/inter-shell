@@ -22,7 +22,7 @@ namespace InterShell.Components {
             text.Append(Head);
             foreach (var line in lines) {
                 text.AppendLine(MarkLine(line));
-                prevLine = line.Trim();
+                prevLine = line;
             }
             text.Append(Tail);
             return text.ToString();
@@ -94,17 +94,22 @@ namespace InterShell.Components {
                     paraBlock = false;
                     result.AppendLine(Enclose(line, '#', "h4"));
                 }
-                else {
-                    if (!codeBlock) {
-                        if (prevLine == "") {
-                            if (paraBlock) {
-
-                            }
-                            else {
-
-                            }
-                        }
+                else if (codeBlock) {
+                    result.AppendLine(line);
+                }
+                else if (line.Trim() == "") {
+                    // skip
+                }
+                else if (prevLine.Trim() == "") {
+                    if (paraBlock) {
+                        result.AppendLine("<p/>");
                     }
+                    else {
+                        paraBlock = true;
+                    }
+                    result.AppendLine(line);
+                }
+                else {
                     result.AppendLine(line);
                 }
             }
