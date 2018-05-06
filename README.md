@@ -4,4 +4,4 @@ Windows GUI application for organizing and simplifying execution of console appl
 
 To use: download and build the source code.
 
-The help file is in [Wiki](./wiki).
+The help file is in [Wiki](https://github.com/mikesoloviev/intershell/wiki).
