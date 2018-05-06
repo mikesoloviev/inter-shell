@@ -26,7 +26,7 @@ $mantools -p $project -a migrate
 $mantools -p $project -a basics
 
 * notebook
-- Creates a simple notebook web app on top of the basics template
+- Creates a simple notebook web app on top of the basics web site
 
 $mantools -p $project -a notebook
 
