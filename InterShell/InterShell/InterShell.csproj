@@ -66,9 +66,10 @@
     <Compile Include="DataSource\Group.cs" />
     <Compile Include="DataSource\Setting.cs" />
     <Compile Include="DataSource\Library.cs" />
+    <Compile Include="MarkLite\Transform.cs" />
+    <Compile Include="MarkLite\Element.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Components\LibraryManager.cs" />
-    <Compile Include="Components\MarkLite.cs" />
     <Compile Include="Components\ShellEngine.cs" />
     <Compile Include="Components\CommandResult.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -94,7 +95,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="InterShell.original.dat" />
     <None Include="InterShell.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

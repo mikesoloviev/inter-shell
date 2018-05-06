@@ -18,14 +18,13 @@ using InterShell.Components;
 //using System.Windows.Shapes;
 //using InterShell.DataSource;
 
-
 namespace InterShell {
 
     public partial class MainWindow : Window {
 
         LibraryManager Manager { get; set; }
         ShellEngine Engine = new ShellEngine();
-        MarkLite Marker = new MarkLite();
+        MarkLite.Transform MarkTransform = new MarkLite.Transform();
 
         public MainWindow() {
             InitializeComponent();
@@ -38,7 +37,7 @@ namespace InterShell {
             Manager.Open();
             Width = Manager.WindowWidth;
             Height = Manager.WindowHeight;
-            GuideBrowser.NavigateToString(Marker.Load(Path.Combine(Config.Home, Config.HelpFile)));
+            GuideBrowser.NavigateToString(MarkTransform.LoadApply(Path.Combine(Config.Home, Config.HelpFile)));
         }
 
         void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
