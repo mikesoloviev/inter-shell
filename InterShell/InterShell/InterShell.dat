@@ -10,28 +10,32 @@ $mantools = C:\Apps\2mantools\2mantools.exe
 $mantools -p $project -a upgrade
 
 * seed
-- Creates the EF database components and examples
+- Creates the EF database components and DB schema for the notebook web app
 
 $mantools -p $project -a seed
 
 * migrate
 - Runs SQL migration script on dev. DB and maps the DB tables to EF classes
 
-$mantools -p $project -a upgrade
+$mantools -p $project -a migrate
 
-* welcome
-- Creates an example of minimalist web app
+* basics
+- Creates a minimalist web app
 - home page, web site navigation, basic client-server interaction
 
-$mantools -p $project -a welcome
+$mantools -p $project -a basics
+
+* notebook
+- Creates a simple notebook web app on top of the basics template
+
+$mantools -p $project -a notebook
+
+* complete
+- Runs the template sequence: upgrade, seed, migrate, basics, notebook
+
+$mantools -p $project -a complete
 
 * deploy
 - Runs SQL migration script on production DB
 
 $mantools -p $project -a deploy
-
-* complete
-- Runs the template sequence: upgrade, seed, migrate, example
-
-$mantools -p $project -a complete
-
