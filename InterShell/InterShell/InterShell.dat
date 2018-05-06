@@ -1,30 +1,37 @@
 ﻿# 2mantools
 - Tools to automate 2MAN Stack development
 
-project = ~/source/repos/Abc
-tools-exe = C:/bin/2mantools/2mantools.exe
-
-* devtest
-- Various dev. tests
-
-echo Test >> $OUT
+$project = C:\Users\Public\Projects\MyWebApp
+$mantools = C:\Apps\2mantools\2mantools.exe
 
 * upgrade
 - Upgrades NET Core Angular template to 2MAN Stack
 
-$tools-exe -p $project -a upgrade
+$mantools -p $project -a upgrade
+
+* seed
+- Creates the EF database components and examples
+
+$mantools -p $project -a seed
 
 * migrate
-- Upgrades NET Core Angular template to 2MAN Stack
+- Runs SQL migration script on dev. DB and maps the DB tables to EF classes
 
-$tools-exe -p $project -a upgrade
+$mantools -p $project -a upgrade
 
-# sqlite
-- Tools to automate 2MAN Stack development
+* welcome
+- Creates an example of minimalist web app
+- home page, web site navigation, basic client-server interaction
 
-sqlite-exe = C:/bin/2mantools/2mantools.exe
+$mantools -p $project -a welcome
 
-* run-script
-- Upgrades NET Core Angular template to 2MAN Stack
+* deploy
+- Runs SQL migration script on production DB
 
-$tools-exe -p $project -a upgrade
+$mantools -p $project -a deploy
+
+* complete
+- Runs the template sequence: upgrade, seed, migrate, example
+
+$mantools -p $project -a complete
+
