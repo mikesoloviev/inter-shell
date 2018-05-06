@@ -66,8 +66,8 @@
     <Compile Include="DataSource\Group.cs" />
     <Compile Include="DataSource\Setting.cs" />
     <Compile Include="DataSource\Library.cs" />
-    <Compile Include="MarkLite\Transform.cs" />
-    <Compile Include="MarkLite\Element.cs" />
+    <Compile Include="Markease\Transform.cs" />
+    <Compile Include="Markease\Element.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Components\LibraryManager.cs" />
     <Compile Include="Components\ShellEngine.cs" />
