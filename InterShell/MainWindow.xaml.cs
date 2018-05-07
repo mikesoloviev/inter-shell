@@ -37,7 +37,7 @@ namespace InterShell {
             Manager.Open();
             Width = Manager.WindowWidth;
             Height = Manager.WindowHeight;
-            GuideBrowser.NavigateToString(MarkTransform.LoadApply(Path.Combine(Config.Home, Config.HelpFile)));
+            NavigateHome();
         }
 
         void CommandList_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -100,6 +100,14 @@ namespace InterShell {
             if (dialog.ShowDialog() == true) {
                 Manager.ExportLibrary(dialog.FileName);
             }
+        }
+
+        void GuideHome_Click(object sender, RoutedEventArgs e) {
+            NavigateHome();
+        }
+
+        void NavigateHome() {
+            GuideBrowser.NavigateToString(MarkTransform.LoadApply(Path.Combine(Config.Home, Config.HelpFile)));
         }
 
     }

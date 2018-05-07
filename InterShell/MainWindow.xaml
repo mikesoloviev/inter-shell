@@ -180,8 +180,10 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="10" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="1" Style="{StaticResource RegularLabel}">© 2018</TextBlock>
+                        <Button Name="GuideHome" Content="Home" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="GuideHome_Click" Visibility="Hidden" />
                     </Grid>
                 </Grid>
             </TabItem>
