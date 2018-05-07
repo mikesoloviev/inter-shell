@@ -1,0 +1,190 @@
+﻿<Window x:Class="InterShell.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InterShell"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}" Width="800" Height="600" Style="{StaticResource WorkAreaWindow}"
+        Loaded="Window_Loaded">
+    <Grid Style="{StaticResource WorkAreaGrid}">
+        <TabControl Style="{StaticResource WorkAreaTab}">
+            <TabItem Header="Commands" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <ListView Name="CommandList" Grid.Row="0" ItemsSource="{Binding Commands}" Style="{StaticResource RegularList}" 
+                            SelectionChanged="CommandList_SelectionChanged">
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource NoHeader}">
+                                <GridView.Columns>
+                                    <GridViewColumn>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical" Margin="4,2,0,2">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                                    <TextBlock Text="{Binding Note}" Margin="8,2,0,0" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Command.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
+                        <TextBlock Text="{Binding CommandStatus}" Grid.Column="1" Style="{StaticResource RegularLabel}" />
+                        <Button Content="Execute" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="CommandExecute_Click" />
+                        <Button Content="Details" Grid.Column="3" Template="{StaticResource RoundedButton}" Click="CommandDetails_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Settings" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <ListView Name="SettingList" Grid.Row="0" ItemsSource="{Binding Settings}" Style="{StaticResource RegularList}" 
+                            SelectionChanged="SettingList_SelectionChanged">
+                        <ListView.View>
+                            <GridView>
+                                <GridView.Columns>
+                                    <GridViewColumn>
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Name" />
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" Margin="4,4,0,4" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn>
+                                        <GridViewColumn.Header>
+                                            <TextBlock Text="Value" />
+                                        </GridViewColumn.Header>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Value}" Margin="4,4,0,4" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Setting.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
+                        <TextBox Text="{Binding Setting.Value}" Grid.Column="1" Style="{StaticResource Singleline}" />
+                        <Button Content="Update" Grid.Column="3" Template="{StaticResource RoundedButton}" Click="SettingUpdate_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Groups" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <ListView Name="GroupList" ItemsSource="{Binding Groups}" Grid.Row="0" Style="{StaticResource RegularList}" 
+                            SelectionChanged="GroupList_SelectionChanged">
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource NoHeader}">
+                                <GridView.Columns>
+                                    <GridViewColumn>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Vertical" Margin="4,2,0,2">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                                    <TextBlock Text="{Binding Note}" Margin="8,2,0,0" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView.Columns>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Group.Name}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
+                        <Button Content="Select" Grid.Column="1" Template="{StaticResource RoundedButton}" Click="GroupSelect_Click" />
+                        <Button Content="Details" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="GroupDetails_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Details" Name="DetailsTab" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <TextBox Text="{Binding DetailContent}" Grid.Row="0" Style="{StaticResource Multiline}" />
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding DetailLabel}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Library" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <TextBox Grid.Row="0" Text="{Binding LibraryCode}" Style="{StaticResource Multiline}" />
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding LibraryStatus}" Grid.Column="0" Style="{StaticResource LeadLabel}" />
+                        <Button Content="Update" Grid.Column="1" Template="{StaticResource RoundedButton}" Click="LibraryUpdate_Click" />
+                        <Button Content="Import" Grid.Column="2" Template="{StaticResource RoundedButton}" Click="LibraryImport_Click" />
+                        <Button Content="Export" Grid.Column="3" Template="{StaticResource RoundedButton}" Click="LibraryExport_Click" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Guide" Style="{StaticResource RegularTab}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
+                    <WebBrowser Name="GuideBrowser" Grid.Row="0" Style="{StaticResource BrowserWindow}" />
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="10" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="1" Style="{StaticResource RegularLabel}">© 2018</TextBlock>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>        
+    </Grid>
+</Window>
