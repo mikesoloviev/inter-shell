@@ -39,6 +39,13 @@ hr {
   height: 1px;
   padding: 0;
 }
+p {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+p + p {
+  margin-top: 0px;
+}
 ul {
   margin-left: 15px;
   margin-top: 10px;
@@ -47,18 +54,6 @@ ul {
 ul ul {
   margin-top: 0px;
   margin-bottom: 0px;
-}
-b {
-  color: #586068;
-}
-i {
-  color: #004080;
-}
-code {
-  color: #000020;
-  background-color: #F0F0F0;
-  padding-left: 5px;
-  padding-right: 5px;
 }
 pre {
   color: #000020;
@@ -69,12 +64,21 @@ pre {
   border-radius: 4px;
   overflow: auto;
 }
-p {
-  margin-top: 10px;
-  margin-bottom: 10px;
+code {
+  color: #000020;
+  background-color: #F0F0F0;
+  padding-left: 5px;
+  padding-right: 5px;
 }
-p + p {
-  margin-top: 0px;
+b {
+  color: #586068;
+}
+i {
+  color: #004080;
+}
+a {
+  color: #4080C0;
+  text-decoration: none;
 }
 ";
         

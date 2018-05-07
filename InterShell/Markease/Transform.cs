@@ -99,7 +99,7 @@ namespace Markease {
                         break;
                     case "p":
                         content.Append(Open(element.Tag));
-                        content.Append(MarkSpans(element.Text.Trim()));
+                        content.Append(MarkInner(element.Text.Trim()));
                         content.AppendLine(Close(element.Tag));
                         break;
                     case "pre": 
@@ -113,7 +113,7 @@ namespace Markease {
                     default: 
                         if (element.Tag.StartsWith("h")) {
                             content.Append(Open(element.Tag));
-                            content.Append(MarkSpans(element.Text.Trim()));
+                            content.Append(MarkInner(element.Text.Trim()));
                             content.AppendLine(Close(element.Tag));
                         }
                         break;
@@ -129,7 +129,7 @@ namespace Markease {
                 switch (child.Tag) {
                     case "li":
                         content.Append(Open(child.Tag));
-                        content.Append(MarkSpans(child.Text.Trim()));
+                        content.Append(MarkInner(child.Text.Trim()));
                         content.AppendLine(Close(child.Tag));
                         break;
                     case "ul":
@@ -194,18 +194,67 @@ namespace Markease {
             }
         }
 
+        string MarkInner(string line) {
+            return MarkLinks(MarkSpans(MarkEscape(line)));
+        }
+
+        string MarkLinks(string line) {
+            while (true) {
+                var i = line.IndexOf("](");
+                if (i < 0) break;
+                var j = line.IndexOf("(", i);
+                if (j < 0) break;
+                var h = line.LastIndexOf("[", i);
+                if (h < 0) break;
+                var k = line.IndexOf(")", j);
+                if (k < 0) break;
+                var text = line.Substring(h + 1, i - h - 1).Trim();
+                var link = line.Substring(j + 1, k - j - 1).Trim();
+                line = CutPaste(line, h, k, $"<a href='{link}'>{text}</a>");
+            }
+            return line;
+        }
+
+        string CutPaste(string line, int i, int j, string clip) {
+            return line.Substring(0, i) + clip + (j == line.Length - 1 ? "" : line.Substring(j + 1));
+
+        }
+
         string MarkSpans(string line) {
             var result = new StringBuilder();
             var boldSpan = false;
             var italicSpan = false;
             var codeSpan = false;
-            foreach (var c in MarkEscape(line).Replace("**", "~")) {
+            var linkSpan = false;
+            var before = ' ';
+            foreach (var c in line.Replace("**", "~")) {
                 switch (c) {
-                    case '~': result.Append(PutTag("b", ref boldSpan)); break;
-                    case '_': result.Append(PutTag("i", ref italicSpan)); break;
+                    case '(': linkSpan = before == ']'; result.Append(c); break;
+                    case ')': linkSpan = false; result.Append(c); break;
+                    case '~': if (linkSpan) result.Append(c); else result.Append(PutTag("b", ref boldSpan)); break;
+                    case '_': if (linkSpan) result.Append(c); else result.Append(PutTag("i", ref italicSpan)); break;
                     case '`': result.Append(PutTag("code", ref codeSpan)); break;
                     default: result.Append(c); break;  
                 }
+                before = c;
+            }
+            return result.ToString();
+        }
+
+        string MarkEscape(string line) {
+            var result = new StringBuilder();
+            var linkSpan = false;
+            var before = ' ';
+            foreach (var c in line) {
+                switch (c) {
+                    case '(': linkSpan = before == ']'; result.Append(c); break;
+                    case ')': linkSpan = false; result.Append(c); break;
+                    case '<': result.Append("&lt;"); break;
+                    case '>': result.Append("&gt;"); break;
+                    case '&': if (linkSpan) result.Append(c); else result.Append("&amp;"); break;
+                    default: result.Append(c); break;
+                }
+                before = c;
             }
             return result.ToString();
         }
@@ -217,10 +266,6 @@ namespace Markease {
 
         string TrimPrefix(string line, char prefix) {
             return line.TrimStart().TrimStart(prefix).TrimStart();
-        }
-
-        string MarkEscape(string line) {
-            return line.Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
         #endregion
