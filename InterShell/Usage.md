@@ -4,7 +4,7 @@
 
 * Select _Tools > 2mantools_ to apply the current template
 * To change the template you can modify the _Arguments_ field in the _External Tools_ dialog
-* Alternatively you can add several _2mantools_ items to the _Tools_ menu -- each containing its own template -- for example
+* Alternatively you can add several _2mantools_ items to the _Tools_ menu -- each containing its own template -- for example:
   * 2mantools - upgrade
   * 2mantools - migrate
 
@@ -16,3 +16,11 @@
 * In the _Commands_ tab select the template and click _Execute_
 
 #### C. By itself
+
+* Run _2mantools_ as a command line with arguments indicating: `-a` the template,
+and `-p` the path to your project folder (the latter is not needed if you run
+_2mantools_ from you project folder) -- for example:
+
+```
+C:\Apps\2mantools\2mantools.exe -a upgrade -p C:\Users\Public\Projects\MyWebApp
+```
