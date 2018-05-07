@@ -99,12 +99,12 @@ namespace Markease {
                         break;
                     case "p":
                         content.Append(Open(element.Tag));
-                        content.Append(MarkInner(element.Text.Trim()));
+                        content.Append(MarkInner(element));
                         content.AppendLine(Close(element.Tag));
                         break;
                     case "pre": 
                         content.AppendLine(Open(element.Tag));
-                        content.AppendLine(MarkEscape(element.Text.Trim()));
+                        content.AppendLine(MarkInner(element));
                         content.AppendLine(Close(element.Tag));
                         break;
                     case "ul": 
@@ -113,7 +113,7 @@ namespace Markease {
                     default: 
                         if (element.Tag.StartsWith("h")) {
                             content.Append(Open(element.Tag));
-                            content.Append(MarkInner(element.Text.Trim()));
+                            content.Append(MarkInner(element));
                             content.AppendLine(Close(element.Tag));
                         }
                         break;
@@ -129,7 +129,7 @@ namespace Markease {
                 switch (child.Tag) {
                     case "li":
                         content.Append(Open(child.Tag));
-                        content.Append(MarkInner(child.Text.Trim()));
+                        content.Append(MarkInner(child));
                         content.AppendLine(Close(child.Tag));
                         break;
                     case "ul":
@@ -194,8 +194,8 @@ namespace Markease {
             }
         }
 
-        string MarkInner(string line) {
-            return MarkLinks(MarkSpans(MarkEscape(line)));
+        string MarkInner(Element element) {
+            return element.Tag == "pre" ? MarkEscape(element.Text) : MarkLinks(MarkSpans(MarkEscape(element.Text)));
         }
 
         string MarkLinks(string line) {
