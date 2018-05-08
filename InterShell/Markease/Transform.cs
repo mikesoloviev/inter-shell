@@ -47,6 +47,23 @@ namespace Markease {
                     element.Text += line + Environment.NewLine;
                     continue;
                 }
+                // <table> element
+                if (line.StartsWith("|")) {
+                    if (line.Contains("---")) {
+                        ParseColumns(line, element)
+                    }
+                    else {
+                        if (element.Tag == "") {
+                            element.Tag = "table";
+                        }
+                        ParseRow(line, element)
+                    }
+                    continue;
+                }
+                if (line.StartsWith("|-") && element.Tag == "table") {
+                    // TODO
+                    continue;
+                }
                 // <ul> element
                 if (trimLine.StartsWith("* ")) {
                     var tab = line.IndexOf("*");
@@ -88,6 +105,34 @@ namespace Markease {
             return document;
         }
 
+        void ParseRow(string line, Element table) {
+            var row = new Element("tr");
+            table.Children.Add(row);
+            foreach (var cell in ParseCells(line)) {
+                row.Children.Add(new Element("td", cell.Trim()));
+            }
+        }
+
+        void ParseColumns(string line, Element table) {
+            if (!table.Chilrden.Any()) return;
+            var columns = table.Chilrden.First();
+            var aligns = ParseCells(line);
+            for (var i = 0; i < Math.Min(aligns.Count, columns.Count); i++) {
+                columns[i].Tag = "th";
+                if (aligns[i].EndsWith(":")) {
+                    columns[i].Align = aligns[i].StartsWith(":") ? "center" : "right";
+                }
+            }
+        }
+
+        List<string> ParseCells(string line) {
+            var cells = new List<string>();
+            foreach (var cell in line.Trim().Trim('|').Trim().Split('|')) {
+                cells.Add(cell.Trim());
+            }
+            return cells;
+        }
+
         string Compile(Element document) {
             var content = new StringBuilder();
             var previous = new Element();
@@ -109,6 +154,22 @@ namespace Markease {
                         break;
                     case "ul": 
                         CompileUl(element, content);
+                        break;
+                    case "table":
+                        if (!element.Chilrden.Any()) break;
+                        var columns = element.Chilrden.First();
+                        content.AppendLine(Open(element.Tag));
+                        foreach (var row in table.Childen) {
+                            content.Append(Open(row.Tag));
+                            for (var i = 0; i < Math.Min(row.Children.Count, columns.Count); i++) {
+                                var cell = row.Children[i];
+                                content.Append(Open(cell.Tag, columns[i].Align));
+                                content.Append(MarkInner(cell));
+                                content.Append(Close(cell.Tag));
+                            }
+                            content.AppendLine(Close(row.Tag));
+                        }
+                        content.AppendLine(Close(element.Tag));
                         break;
                     default: 
                         if (element.Tag.StartsWith("h")) {

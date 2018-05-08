@@ -55,6 +55,18 @@ ul ul {
   margin-top: 0px;
   margin-bottom: 0px;
 }
+th {
+
+}
+td {
+
+}
+td.center {
+
+}
+td.right {
+  
+}
 pre {
   color: #000020;
   background-color: #F0F0F0;

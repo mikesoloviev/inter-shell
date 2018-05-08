@@ -10,6 +10,7 @@ namespace Markease {
         public string Tag = "";
         public string Text = "";
         public int Tab = -1;
+        public string Align = "";
         public List<Element> Children = new List<Element>();
 
         public Element() {
