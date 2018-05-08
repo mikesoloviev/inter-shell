@@ -1,35 +1,35 @@
 ﻿# 2mantools
 - Tools to automate 2MAN Stack development
 
-$project-folder = C:\Users\Public\Projects\MyWebApp
-$mantools = C:\Apps\2mantools\2mantools.exe
+project-folder = C:\Users\Public\Projects\MyWebApp
+run2mantools = C:\Apps\2mantools\2mantools.exe
 
 * upgrade
 - Upgrades NET Core Angular template to 2MAN Stack
 
-$mantools -p $project-folder -a upgrade
+$run2mantools -p $project-folder -a upgrade
 
 * seed
 - Creates the EF components and DB schema for the notebook web app
 
-$mantools -p $project-folder -a seed
+$run2mantools -p $project-folder -a seed
 
 * migrate
 - Runs SQL migration script on dev. DB and maps the DB tables to EF classes
 
-$mantools -p $project-folder -a migrate
+$run2mantools -p $project-folder -a migrate
 
 * notebook
 - Creates a simple notebook web app
 
-$mantools -p $project-folder -a notebook
+$run2mantools -p $project-folder -a notebook
 
 * complete
 - Runs the template sequence: upgrade, seed, migrate, notebook
 
-$mantools -p $project-folder -a complete
+$run2mantools -p $project-folder -a complete
 
 * deploy
 - Runs SQL migration script on production DB
 
-$mantools -p $project-folder -a deploy
+$run2mantools -p $project-folder -a deploy

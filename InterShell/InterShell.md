@@ -101,9 +101,9 @@ It consists of the following tabs:
 
 The list of commands of the current group.
 
-'Execute' button runs the selected command and displays the result the _Details_ tab.
+`Execute` button runs the selected command and displays the result the _Details_ tab.
 
-'Details' button displays the full command description in the _Details_ tab.
+`Details` button displays the full command description in the _Details_ tab.
 
 #### Settings
 
@@ -139,3 +139,4 @@ Edit the _Library_ text to add and modify _Commands_, _Groups_, and _Settings_.
 #### Guide
 
 A quick start guide to **InterShell**.
+
