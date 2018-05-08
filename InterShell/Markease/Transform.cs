@@ -50,13 +50,13 @@ namespace Markease {
                 // <table> element
                 if (line.StartsWith("|")) {
                     if (line.Contains("---")) {
-                        ParseColumns(line, element)
+                        ParseColumns(line, element);
                     }
                     else {
                         if (element.Tag == "") {
                             element.Tag = "table";
                         }
-                        ParseRow(line, element)
+                        ParseRow(line, element);
                     }
                     continue;
                 }
@@ -99,6 +99,7 @@ namespace Markease {
                 switch (element.Tag) {
                     case "hr": break;
                     case "p": element.Text += line + " "; break;
+                    case "blockquote": element.Text += line.TrimStart('>').Trim() + " "; break;
                     default: if (element.Tag.StartsWith("h")) element.Text = TrimPrefix(line, '#'); break;
                 }
             }
@@ -114,13 +115,13 @@ namespace Markease {
         }
 
         void ParseColumns(string line, Element table) {
-            if (!table.Chilrden.Any()) return;
-            var columns = table.Chilrden.First();
+            if (!table.Children.Any()) return;
+            var columns = table.Children.First().Children;
             var aligns = ParseCells(line);
             for (var i = 0; i < Math.Min(aligns.Count, columns.Count); i++) {
                 columns[i].Tag = "th";
                 if (aligns[i].EndsWith(":")) {
-                    columns[i].Align = aligns[i].StartsWith(":") ? "center" : "right";
+                    columns[i].Style = aligns[i].StartsWith(":") ? "center" : "right";
                 }
             }
         }
@@ -143,33 +144,21 @@ namespace Markease {
                         content.AppendLine(Single(element.Tag));
                         break;
                     case "p":
+                    case "blockquote":
                         content.Append(Open(element.Tag));
                         content.Append(MarkInner(element));
                         content.AppendLine(Close(element.Tag));
                         break;
                     case "pre": 
                         content.AppendLine(Open(element.Tag));
-                        content.AppendLine(MarkInner(element));
+                        content.Append(MarkInner(element));
                         content.AppendLine(Close(element.Tag));
                         break;
                     case "ul": 
                         CompileUl(element, content);
                         break;
                     case "table":
-                        if (!element.Chilrden.Any()) break;
-                        var columns = element.Chilrden.First();
-                        content.AppendLine(Open(element.Tag));
-                        foreach (var row in table.Childen) {
-                            content.Append(Open(row.Tag));
-                            for (var i = 0; i < Math.Min(row.Children.Count, columns.Count); i++) {
-                                var cell = row.Children[i];
-                                content.Append(Open(cell.Tag, columns[i].Align));
-                                content.Append(MarkInner(cell));
-                                content.Append(Close(cell.Tag));
-                            }
-                            content.AppendLine(Close(row.Tag));
-                        }
-                        content.AppendLine(Close(element.Tag));
+                        CompileTable(element, content);
                         break;
                     default: 
                         if (element.Tag.StartsWith("h")) {
@@ -182,6 +171,25 @@ namespace Markease {
                 previous = element;
             }
             return content.ToString();
+        }
+
+        void CompileTable(Element element, StringBuilder content) {
+            if (!element.Children.Any()) return;
+            var columns = element.Children.First().Children;
+            content.AppendLine(Open(element.Tag));
+            for (var j = 0; j < element.Children.Count; j++) {
+                var row = element.Children[j];
+                var style = j == 0 ? "head" : (j % 2 == 0 ? "even" : "odd");
+                content.Append(Open(row.Tag, style));
+                for (var i = 0; i < Math.Min(row.Children.Count, columns.Count); i++) {
+                    var cell = row.Children[i];
+                    content.Append(Open(cell.Tag, columns[i].Style));
+                    content.Append(MarkInner(cell));
+                    content.Append(Close(cell.Tag));
+                }
+                content.AppendLine(Close(row.Tag));
+            }
+            content.AppendLine(Close(element.Tag));
         }
 
         void CompileUl(Element element, StringBuilder content) {
@@ -205,6 +213,7 @@ namespace Markease {
         
         string Template(string content) {
             var text = new StringBuilder();
+            text.AppendLine("<!DOCTYPE html>");
             text.AppendLine("<html>");
             text.AppendLine("<head>");
             text.Append("<style>");
@@ -249,6 +258,9 @@ namespace Markease {
             }
             else if (line.StartsWith("#### ")) {
                 element.Tag = "h4";
+            }
+            else if (line.StartsWith("> ")) {
+                element.Tag = "blockquote";
             }
             else {
                 element.Tag = "p";

@@ -1,7 +1,4 @@
-namespace  Markease  {
-    public class Stylesheet {
-        public static string Style = @"
-body {
+﻿body {
     font-family: 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.5;
@@ -113,8 +110,4 @@ i {
 a {
     color: #4080C0;
     text-decoration: none;
-}
-
-";
-    }
 }
