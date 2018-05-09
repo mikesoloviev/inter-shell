@@ -8,6 +8,8 @@ namespace Submark {
 
     public class Transform {
 
+        Vizmark.Transform VizmarkTransform = new Vizmark.Transform();
+
         #region Interface
 
         public string LoadApply(string path) {
@@ -34,6 +36,7 @@ namespace Submark {
             var element = new Element();
             document.Children.Add(element);
             var isPre = false;
+            var isSvg = false;
             foreach (var rawLine in lines) {
                 var trimLine = rawLine.Trim();
                 var line = trimLine == "" ? "" : rawLine;
@@ -45,6 +48,16 @@ namespace Submark {
                 }
                 if (isPre) {
                     element.Text += line + Environment.NewLine;
+                    continue;
+                }
+                // <svg> element
+                if (line.StartsWith("^^^")) {
+                    isSvg = !isSvg;
+                    if (isSvg) element.Tag = "svg";
+                    continue;
+                }
+                if (isSvg) {
+                    element.Text += line + "\n";
                     continue;
                 }
                 // <table> element
@@ -136,7 +149,6 @@ namespace Submark {
 
         string Compile(Element document) {
             var content = new StringBuilder();
-            //var previous = new Element();
             foreach(var element in document.Children) {
                 if (element.Tag == "") continue;
                 switch (element.Tag) {
@@ -160,6 +172,9 @@ namespace Submark {
                     case "table":
                         CompileTable(element, content);
                         break;
+                    case "svg":
+                        content.Append(VizmarkTransform.Apply(element.Text.Split('\n')));
+                        break;
                     default: 
                         if (element.Tag.StartsWith("h")) {
                             content.Append(Open(element.Tag));
@@ -168,7 +183,6 @@ namespace Submark {
                         }
                         break;
                 }
-                //previous = element;
             }
             return content.ToString();
         }
@@ -213,9 +227,10 @@ namespace Submark {
         
         string Template(string content) {
             var text = new StringBuilder();
-            text.AppendLine("<!DOCTYPE html>");
+            text.AppendLine("<!DOCTYPE html>"); // INFO: needed to fix CSS: namely to make the <table> style inherit the <body> style
             text.AppendLine("<html>");
             text.AppendLine("<head>");
+            text.AppendLine("<meta http-equiv='X-UA-Compatible' content='IE=9'/>"); // INFO: needed to fix SVG rendering by the WPF WebBroweser control
             text.Append("<style>");
             text.Append(Stylesheet.Style);
             text.AppendLine("</style>");

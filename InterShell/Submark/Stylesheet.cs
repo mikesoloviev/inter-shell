@@ -1,4 +1,4 @@
-namespace Submark  {
+namespace  Submark  {
     public class Stylesheet {
         public static string Style = @"
 body {
@@ -8,7 +8,7 @@ body {
     background-color: white;
     color: #202020;
     margin-top: -10px;
-    margin-left: 10px;
+    margin-left: 20px;
 }
 h1, h2, h3, h4 {
     margin: 20px 0px 10px 0px;
@@ -113,6 +113,10 @@ i {
 a {
     color: #4080C0;
     text-decoration: none;
+}
+svg {
+    margin-top: 10px;
+    margin-bottom: 5px;
 }
 
 ";
