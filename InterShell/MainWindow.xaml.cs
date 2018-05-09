@@ -24,7 +24,7 @@ namespace InterShell {
 
         LibraryManager Manager { get; set; }
         ShellEngine Engine = new ShellEngine();
-        Markease.Transform MarkTransform = new Markease.Transform();
+        Submark.Transform MarkTransform = new Submark.Transform();
 
         public MainWindow() {
             InitializeComponent();
