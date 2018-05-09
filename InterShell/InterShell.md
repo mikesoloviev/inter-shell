@@ -139,4 +139,3 @@ Edit the _Library_ text to add and modify _Commands_, _Groups_, and _Settings_.
 #### Guide
 
 A quick start guide to **InterShell**.
-

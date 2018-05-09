@@ -24,7 +24,7 @@ namespace InterShell {
 
         LibraryManager Manager { get; set; }
         ShellEngine Engine = new ShellEngine();
-        Submark.Transform MarkTransform = new Submark.Transform();
+        Submark.Transform SubmarkTransform = new Submark.Transform();
 
         public MainWindow() {
             InitializeComponent();
@@ -107,7 +107,7 @@ namespace InterShell {
         }
 
         void NavigateHome() {
-            GuideBrowser.NavigateToString(MarkTransform.LoadApply(Path.Combine(Config.Home, Config.HelpFile)));
+            GuideBrowser.NavigateToString(SubmarkTransform.LoadApply(Path.Combine(Config.Home, Config.HelpFile)));
         }
 
     }

@@ -66,9 +66,12 @@
     <Compile Include="DataSource\Group.cs" />
     <Compile Include="DataSource\Setting.cs" />
     <Compile Include="DataSource\Library.cs" />
-    <Compile Include="Markease\Stylesheet.cs" />
-    <Compile Include="Markease\Transform.cs" />
-    <Compile Include="Markease\Element.cs" />
+    <Compile Include="Submark\Stylesheet.cs" />
+    <Compile Include="Submark\Transform.cs" />
+    <Compile Include="Submark\Element.cs" />
+    <Compile Include="Vizmark\Attribute.cs" />
+    <Compile Include="Vizmark\Element.cs" />
+    <Compile Include="Vizmark\Transform.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Components\LibraryManager.cs" />
     <Compile Include="Components\ShellEngine.cs" />
@@ -96,7 +99,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="embed.text" />
+    <None Include="fileinjector.task" />
     <None Include="InterShell.ini">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -115,7 +118,7 @@
     <Content Include="InterShell.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Markease\Stylesheet.css" />
+    <Content Include="Submark\Stylesheet.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
