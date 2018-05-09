@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -10,7 +9,7 @@ namespace Vizmark {
         public string Tag = "";
         public int Tab = -1;
         public string Content = "";
-        public Dictionary<string, Attribute> Attributes = new Dictionary<string, Attribute>();
+        public Dictionary<string, string> Attributes = new Dictionary<string, string>();
         public List<Element> Children = new List<Element>();
 
         public Element() {

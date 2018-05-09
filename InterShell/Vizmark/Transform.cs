@@ -4,6 +4,69 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+// EXAMPLE:
+// ^^^svg:vizmark
+// $size = width: 100; height: 100 | $small-black-box = width: 10; height: 10; fill: black; stroke: black
+// - $size
+// * rect; x: 0; y: 0; $size
+//   - fill: green; stroke: red
+// * rect; x: 10; y:10; $small-black-box
+// ^^^
+
+// DOCS -- MACROS
+// $origin = x: 100; y: 200 | $size = width: 100; height: 50
+// * rect; $origin; $size
+
+// TODO
+/*
+(1) Defs
+
+@ blue-gradient-1; ...
+  @ stop; ...
+  @ stop; ...
+
+(2) Plot
+
+* plot
+  - view: graph
+  - fill: red, blue, green
+  - stroke: red, blue, green
+  - mark: plus, cross, dot 
+  - origin-x: 10; origin-y: 200
+  - scale-x: 10; scale-y: 1
+  - axis-x: 0, 100, 5; axis-y: 100, 200, 10
+  - axis-color: black
+  - data: data-table-1
+
+* plot
+  - view: graph
+  - skin: black-white-graph
+  - origin: 10, 200
+  - margin: 10, 50
+  - scale: 10, 1
+  - axes: 0, 100, 5, 100, 200, 10
+  - data: data-table-1
+  - legend: bottom
+
+# data-table-1
+: x, Red Growth, Blue Growth, Green Growth
+1, 1, 2, 3
+2, 2, 2, 2
+3, 4, 7, 5
+
+
+== NOTES ==
+
+VIEW SET: graph, histogram, piechart
+MARK SET: plus, cross, dot, square, rhomb, triangle, star
+SKIN SET: predefined plot attributes gouped into 'skin'
+LEGEND: table column names will go to 'legend', like this:
+
+<red line> Red Growth
+<blue line> Blue Growth
+<green line> Green Growth
+*/
+
 namespace Vizmark {
 
     public class Transform {
@@ -15,48 +78,86 @@ namespace Vizmark {
         }
 
         #endregion
-        
-        #region Main Methods
 
-        Dictionary<string, string> Synonyms = {
+        #region Macros
+
+        // NOTE: Depending on implementation Macros can be global for the source .markdown file
+
+        Dictionary<string, string> Macros = new Dictionary<string, string>();
+
+        string ApplyMacros(string line) {
+            if (line.Contains("$")) {
+                foreach (var key in Macros.Keys.OrderByDescending(x => x.Length)) {
+                    if (line.Contains(key)) {
+                        line = line.Replace(key, Macros[key]);
+                    }
+                }
+            }
+            return line;
+        }
+
+        void DefineMacros(string line) {
+            foreach (var field in line.Split('|')) {
+                DefineMacro(field.Trim());
+            }
+        }
+
+        void DefineMacro(string line) {
+            var fields = line.Split('=');
+            if (fields.Length < 2) return;
+            Macros[fields[0].Trim()] = ApplyMacros(fields[1].Trim());
+        }
+
+        #endregion
+
+        #region Parse Methods
+
+        Dictionary<string, string> Synonyms = new Dictionary<string, string> {
             {"figure", "svg"},
             {"group", "g"},
             {"rectangle", "rect"},
             {"oval", "ellipse"}
         };
 
+        string CanonicTag(string tag) {
+            return Synonyms.ContainsKey(tag) ? Synonyms[tag] : tag;
+        }
+
         Element Parse(string[] lines) {
             var document = new Element("svg", -1);
+            var parents = new Stack<Element>();
+            parents.Push(document);
             var element = document;
-            var stack = new Stack<Element>();
-            stack.Push(document);
             var lastName = "";
             foreach (var rawLine in lines) {
-                var trimLine = rawLine.Trim();
-                var line = trimLine == "" ? "" : rawLine;
-                if (trimLine == "") {
-                    // skip
+                var defLine = rawLine.Trim();
+                if (defLine == "") {
+                    continue;
                 }
-                else if (trimLine.StartsWith("*")) {
-                    var tab = line.IndexOf("*");
-                    if (tab <= stack.Peek().Tab) {
-                        while (tab <= stack.Peek().Tab) stack.Pop();
-                        element = stack.Peek();
-                    }
+                // macros
+                if (defLine.StartsWith("$") && defLine.Contains("=")) {
+                    DefineMacros(defLine);
+                    continue;
+                }
+                defLine = ApplyMacros(defLine);
+                // elements
+                if (defLine.StartsWith("* ")) {
+                    var tab = rawLine.IndexOf("*");
+                    while (tab <= parents.Peek().Tab) parents.Pop();
                     element = new Element("", tab);
-                    stack.Peek().Children.Add(element);
-                    stack.Push(element);
-                    lastName = ParseElement(trimLine, element);
+                    parents.Peek().Children.Add(element);
+                    parents.Push(element);
+                    lastName = ParseElement(defLine, element);
                 }
-                else if (trimLine.StartsWith("-")) {
-                    lastName = ParseAttributes(line, element);
+                else if (defLine.StartsWith("- ")) {
+                    lastName = ParseAttributes(defLine, element);
                 }
-                else if (trimLine.StartsWith(">")) {
-                    element.Content += trimLine.Substring(1).Trim() + " ";
+                else if (defLine.StartsWith("> ")) {
+                    element.Content += defLine.Substring(1).Trim() + " ";
                 }
                 else {
                     if (element.Attributes.ContainsKey(lastName)) {
-                        element.Attributes[lastName] += " " + trimLine;
+                        element.Attributes[lastName] += " " + defLine;
                     }
                 }
             }
@@ -69,21 +170,19 @@ namespace Vizmark {
                 if (field.StartsWith("*")) {
                     element.Tag = CanonicTag(field.TrimStart('*').Trim());
                 }
-                else {
+                else if (field.Contains(":")) {
                     lastName = ParseAttribute(field, element);
                 }
             }
             return lastName;
         }
 
-        string CanonicTag(string tag) {
-            return Synonyms.ContainsKey(tag) ? Synonyms[tag] : tag;
-        }
-
         string ParseAttributes(string line, Element element) {
             var lastName = "";
             foreach (var field in line.TrimStart('-').Split(';')) {
-                lastName = ParseAttribute(field, element);
+                if (field.Contains(":")) {
+                    lastName = ParseAttribute(field, element);
+                }
             }
             return lastName;
         }
@@ -98,6 +197,10 @@ namespace Vizmark {
             return name;
         }
 
+        #endregion
+
+        #region Compile Methods
+
         string Compile(Element document) {
             var content = new StringBuilder();
             CompileElement(document, content);
@@ -109,9 +212,9 @@ namespace Vizmark {
             foreach (var name in element.Attributes.Keys) {
                 content.Append($" {name}='{element.Attributes[name]}'");
             }
-            if (element.Childern.Any()) {
+            if (element.Children.Any()) {
                 content.AppendLine(">");
-                foreach (var child in element.Childern) {
+                foreach (var child in element.Children) {
                     CompileElement(child, content);
                 }
                 content.AppendLine($"</{element.Tag}>");
@@ -131,6 +234,6 @@ namespace Vizmark {
         }
 
         #endregion
-        
+
     }
 }
